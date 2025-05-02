@@ -35,8 +35,8 @@ A Django app that patches `django.contrib.gis` to lazily load the GDAL library, 
    ]
    ```
 
-   > [!NOTE]
-   > **Order matters!** It's crucial to place `'django_lazy_gdal'` immediately after `'django.contrib.gis'` and **before any other apps that might access the GeoDjango models in `django.contrib.gis.models` or access `django.contrib.gis.gdal.libgdal` directly**. This ensures that the patching occurs before other apps access the module, making the lazy loading effective throughout your project.
+> [!NOTE]
+> **Order matters!** It's crucial to place `'django_lazy_gdal'` immediately after `'django.contrib.gis'` and **before any other apps that might access the GeoDjango models in `django.contrib.gis.models` or access `django.contrib.gis.gdal.libgdal` directly**. This ensures that the patching occurs before other apps access the module, making the lazy loading effective throughout your project.
 
 3. That's it! The library will automatically patch Django's `django.contrib.gis.gdal.libgdal` module to use lazy loading.
 
