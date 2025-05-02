@@ -17,6 +17,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.2.0]
+
 ### Changed
 
 - **Breaking**: Move monkeypatching from Django app's `ready()` method to dedicated function. Instead of just adding the app to `INSTALLED_APPS`, you now need to explicitly call `django_lazy_gdal.monkeypatch()` at the top of your settings file.
@@ -36,5 +38,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Josh Thomas <josh@joshthomas.dev> (maintainer)
 
-[unreleased]: https://github.com/joshuadavidthomas/django-lazy-gdal/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/joshuadavidthomas/django-lazy-gdal/compare/v0.2.0...HEAD
 [0.1.0]: https://github.com/joshuadavidthomas/django-lazy-gdal/releases/tag/v0.1.0
+[0.2.0]: https://github.com/joshuadavidthomas/django-lazy-gdal/releases/tag/v0.2.0
