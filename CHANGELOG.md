@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed GDAL version comparison by implementing custom comparison operators for the lazy `GDAL_VERSION` object, allowing Django to compare version information without loading GDAL prematurely
+
 ## [0.2.1]
 
 ### Fixed

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import operator
 import os
 import re
 from ctypes import CDLL
@@ -11,6 +12,7 @@ from ctypes.util import find_library
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.functional import SimpleLazyObject
+from django.utils.functional import new_method_proxy
 
 logger = logging.getLogger("django.contrib.gis")
 
@@ -204,4 +206,9 @@ def gdal_version_info():
     return (int(major), int(minor), subminor and int(subminor))
 
 
-GDAL_VERSION = SimpleLazyObject(gdal_version_info)
+class ComparableSimpleLazyObject(SimpleLazyObject):
+    __ge__ = new_method_proxy(operator.ge)
+    __le__ = new_method_proxy(operator.le)
+
+
+GDAL_VERSION = ComparableSimpleLazyObject(gdal_version_info)

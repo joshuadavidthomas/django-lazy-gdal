@@ -145,3 +145,19 @@ def test_load_gdal_failure(mock_find_library):
 
     with pytest.raises(ImproperlyConfigured, match="Could not find the GDAL library"):
         lazy_libgdal.lgdal.some_attribute
+
+
+def test_gdal_version_comparison():
+    import django_lazy_gdal.libgdal as lazy_libgdal
+    from django_lazy_gdal.libgdal import ComparableSimpleLazyObject
+
+    assert isinstance(lazy_libgdal.GDAL_VERSION, ComparableSimpleLazyObject)
+
+    version = ComparableSimpleLazyObject(lambda: (3, 2, 1))
+
+    assert version >= (3, 0, 0)
+    assert version > (2, 9, 9)
+    assert version < (3, 3, 0)
+    assert version <= (3, 2, 1)
+    assert version == (3, 2, 1)
+    assert version != (3, 0, 0)
