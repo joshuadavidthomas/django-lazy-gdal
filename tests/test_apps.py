@@ -10,12 +10,7 @@ from django.utils.functional import SimpleLazyObject
 from django.utils.functional import empty
 
 
-def test_libgdal_is_monkeypatched(settings):
-    settings.INSTALLED_APPS = [
-        "django.contrib.gis",
-        "django_lazy_gdal",
-    ]
-
+def test_libgdal_is_monkeypatched():
     django.setup()
 
     from django.contrib.gis.gdal import libgdal
@@ -76,12 +71,7 @@ def test_libgdal_is_normal(INSTALLED_APPS, settings):
             del sys.modules[target_module_name]
 
 
-def test_lgdal_is_lazy(settings):
-    settings.INSTALLED_APPS = [
-        "django.contrib.gis",
-        "django_lazy_gdal",
-    ]
-
+def test_lgdal_is_lazy():
     django.setup()
 
     from django.contrib.gis.gdal.libgdal import lgdal

@@ -28,6 +28,10 @@ TEST_SETTINGS = {
         }
     },
     "EMAIL_BACKEND": "django.core.mail.backends.locmem.EmailBackend",
+    "INSTALLED_APPS": [
+        "django.contrib.gis",
+        "django_lazy_gdal",
+    ],
     "LOGGING_CONFIG": None,
     "PASSWORD_HASHERS": [
         "django.contrib.auth.hashers.MD5PasswordHasher",
