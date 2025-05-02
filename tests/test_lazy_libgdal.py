@@ -27,9 +27,19 @@ from django.utils.functional import empty
 
 @pytest.fixture(autouse=True)
 def setup():
-    if "django_lazy_gdal.libgdal" in sys.modules:
-        del sys.modules["django_lazy_gdal.libgdal"]
+    # Clean up modules before each test
+    modules_to_clean = [
+        "django_lazy_gdal.libgdal",
+        "django.contrib.gis.gdal.libgdal",
+    ]
+    for module in modules_to_clean:
+        if module in sys.modules:
+            del sys.modules[module]
     yield
+    # Clean up after test
+    for module in modules_to_clean:
+        if module in sys.modules:
+            del sys.modules[module]
 
 
 def test_lgdal_not_loaded_on_import():

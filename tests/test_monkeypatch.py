@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from unittest import mock
 
 import pytest
 from django.utils.functional import SimpleLazyObject
@@ -72,3 +73,33 @@ def test_lgdal_is_lazy_after_monkeypatch():
     assert isinstance(lgdal, SimpleLazyObject)
     assert hasattr(lgdal, "_wrapped")
     assert lgdal._wrapped is empty
+
+
+def test_monkeypatch_doesnt_import_django_libgdal():
+    """Test that monkeypatching doesn't trigger GDAL loading by importing Django's module."""
+    import django_lazy_gdal
+
+    # Mock the importlib.import_module function to detect any attempts to import Django's GDAL module
+    with mock.patch("importlib.import_module") as mock_import:
+        # Run the monkeypatch function
+        django_lazy_gdal.monkeypatch()
+
+        # Verify importlib.import_module wasn't called with Django's GDAL module
+        for call in mock_import.call_args_list:
+            args, _ = call
+            if args and args[0] == "django.contrib.gis.gdal.libgdal":
+                pytest.fail(
+                    "Monkeypatching tried to import django.contrib.gis.gdal.libgdal"
+                )
+
+        # Alternative verification - look for any calls with GDAL or libgdal in the module name
+        django_gdal_imports = [
+            args[0]
+            for args, _ in mock_import.call_args_list
+            if args
+            and "django" in args[0]
+            and ("gdal" in args[0].lower() or "libgdal" in args[0].lower())
+        ]
+        assert not django_gdal_imports, (
+            f"Monkeypatching imported Django GDAL modules: {django_gdal_imports}"
+        )
