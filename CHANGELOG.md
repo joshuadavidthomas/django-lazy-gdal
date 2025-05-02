@@ -20,6 +20,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - Initial release of django-lazy-gdal
+- Lazy loading of GDAL libraries to defer loading until actually needed and avoid `ImproperlyConfigured` exceptions
+- Monkeypatching mechanism to replace Django's default GDAL loading in `django.contrib.gis.gdal.libgdal`
 - Support for Python 3.9, 3.10, 3.11, 3.12, 3.13
 - Support for Django 4.2, 5.1, 5.2
 
