@@ -107,7 +107,7 @@ jobs:
 
       - name: Run type checks
         run: |
-          uv run nox --session "types"
+          uv run noxfile.py --session "types"
 
   coverage:
     runs-on: ubuntu-latest
@@ -121,4 +121,4 @@ jobs:
 
       - name: Generate code coverage
         run: |
-          uv run nox --session "coverage"
+          uv run noxfile.py --session "coverage"
