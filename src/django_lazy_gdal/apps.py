@@ -3,7 +3,6 @@ from __future__ import annotations
 import importlib
 import logging
 import sys
-from importlib.util import find_spec
 from typing import final
 
 from django.apps import AppConfig
@@ -27,24 +26,10 @@ class DjangoLazyGDALConfig(AppConfig):
             return
         DjangoLazyGDALConfig._patching_done = True
 
+        from django_lazy_gdal import lazy_libgdal
+
         django_libgdal_mod = "django.contrib.gis.gdal.libgdal"
         lazy_libgdal_mod = "django_lazy_gdal.lazy_libgdal"
-
-        spec = find_spec(django_libgdal_mod)
-        if spec is None:
-            logger.debug(
-                f"{django_libgdal_mod} spec not found, not applying lazy patch."
-            )
-            return
-
-        try:
-            from django_lazy_gdal import lazy_libgdal
-        except ImportError:
-            logger.warning(
-                f"Could not import {lazy_libgdal_mod}, cannot apply lazy patch.",
-                exc_info=True,
-            )
-            return
 
         original_libgdal = None
         original_module_dict = {}
