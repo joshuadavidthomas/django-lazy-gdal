@@ -17,6 +17,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.2.2]
+
 ### Fixed
 
 - Fixed GDAL version comparison by implementing custom comparison operators for the lazy `GDAL_VERSION` object, allowing Django to compare version information without loading GDAL prematurely
@@ -48,7 +50,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Josh Thomas <josh@joshthomas.dev> (maintainer)
 
-[unreleased]: https://github.com/joshuadavidthomas/django-lazy-gdal/compare/v0.2.1...HEAD
+[unreleased]: https://github.com/joshuadavidthomas/django-lazy-gdal/compare/v0.2.2...HEAD
 [0.1.0]: https://github.com/joshuadavidthomas/django-lazy-gdal/releases/tag/v0.1.0
 [0.2.0]: https://github.com/joshuadavidthomas/django-lazy-gdal/releases/tag/v0.2.0
 [0.2.1]: https://github.com/joshuadavidthomas/django-lazy-gdal/releases/tag/v0.2.1
+[0.2.2]: https://github.com/joshuadavidthomas/django-lazy-gdal/releases/tag/v0.2.2
