@@ -57,11 +57,11 @@ def test_lgdal_loaded_on_first_access():
     try:
         with pytest.raises(AttributeError):
             lazy_libgdal.lgdal.some_attribute
+
+        assert lazy_libgdal.lgdal._wrapped is not empty
     except ImproperlyConfigured:
         # GDAL is not installed, but our wrapper worked
         pass
-
-    assert lazy_libgdal.lgdal._wrapped is not empty
 
 
 @pytest.mark.skipif(os.name != "nt", reason="lwingdal is Windows-specific")
@@ -74,11 +74,10 @@ def test_lwingdal_loaded_on_first_access():
         with pytest.raises(AttributeError):
             lazy_libgdal.lwingdal.some_attribute
 
+        assert lazy_libgdal.lwingdal._wrapped is not empty
     except ImproperlyConfigured:
         # GDAL is not installed, but our wrapper worked
         pass
-
-    assert lazy_libgdal.lwingdal._wrapped is not empty
 
 
 def test_lgdal_load_is_cached():

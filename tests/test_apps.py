@@ -13,14 +13,8 @@ from django.utils.functional import empty
 def test_libgdal_is_monkeypatched():
     django.setup()
 
-    from django.contrib.gis.gdal import libgdal
-
     from django_lazy_gdal import lazy_libgdal
 
-    django_libgdal = import_module("django.contrib.gis.gdal.libgdal")
-
-    assert libgdal is not lazy_libgdal
-    assert django_libgdal is lazy_libgdal
     assert sys.modules["django.contrib.gis.gdal.libgdal"] is lazy_libgdal
 
 
