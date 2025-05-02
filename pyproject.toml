@@ -14,6 +14,11 @@ dev = [
   "pytest-xdist>=3.6.1",
   "ruff>=0.11.6",
 ]
+types = [
+    "django-stubs>=5.1.3",
+    "django-stubs-ext>=5.1.3",
+    "mypy>=1.15.0",
+]
 
 [project]
 authors = [{name = "Josh Thomas", email = "josh@joshthomas.dev"}]
