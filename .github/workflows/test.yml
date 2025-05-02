@@ -90,6 +90,7 @@ jobs:
       - uses: trundev/setup-gdal@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          use-conda: 'false'
 
       - name: Run tests using default Python and Django versions
         run: |
