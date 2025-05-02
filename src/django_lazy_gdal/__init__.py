@@ -25,7 +25,7 @@ def monkeypatch() -> None:
         return
     _patching_done = True
 
-    from django_lazy_gdal import lazy_libgdal
+    from django_lazy_gdal import libgdal as lazy_libgdal
 
     django_libgdal_mod = "django.contrib.gis.gdal.libgdal"
     lazy_libgdal_mod = "django_lazy_gdal.lazy_libgdal"

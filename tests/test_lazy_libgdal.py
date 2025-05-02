@@ -12,7 +12,7 @@ from django.utils.functional import empty
 # Testing for the lazy loading of the GDAL library - whether or not GDAL
 # is installed - verifying that:
 #
-# - The GDAL library is not loaded upon importing `django_lazy_gdal.lazy_libgdal`.
+# - The GDAL library is not loaded upon importing `django_lazy_gdal.libgdal`.
 # - The library is loaded only once upon the first access to an attribute
 #   of the lazy object.
 # - Subsequent accesses do not reload the library.
@@ -27,13 +27,13 @@ from django.utils.functional import empty
 
 @pytest.fixture(autouse=True)
 def setup():
-    if "django_lazy_gdal.lazy_libgdal" in sys.modules:
-        del sys.modules["django_lazy_gdal.lazy_libgdal"]
+    if "django_lazy_gdal.libgdal" in sys.modules:
+        del sys.modules["django_lazy_gdal.libgdal"]
     yield
 
 
 def test_lgdal_not_loaded_on_import():
-    import django_lazy_gdal.lazy_libgdal as lazy_libgdal
+    import django_lazy_gdal.libgdal as lazy_libgdal
 
     assert isinstance(lazy_libgdal.lgdal, SimpleLazyObject)
     assert hasattr(lazy_libgdal.lgdal, "_wrapped")
@@ -42,7 +42,7 @@ def test_lgdal_not_loaded_on_import():
 
 @pytest.mark.skipif(os.name != "nt", reason="lwingdal is Windows-specific")
 def test_lwingdal_not_loaded_on_import():
-    import django_lazy_gdal.lazy_libgdal as lazy_libgdal
+    import django_lazy_gdal.libgdal as lazy_libgdal
 
     assert isinstance(lazy_libgdal.lwingdal, SimpleLazyObject)
     assert hasattr(lazy_libgdal.lwingdal, "_wrapped")
@@ -50,7 +50,7 @@ def test_lwingdal_not_loaded_on_import():
 
 
 def test_lgdal_loaded_on_first_access():
-    import django_lazy_gdal.lazy_libgdal as lazy_libgdal
+    import django_lazy_gdal.libgdal as lazy_libgdal
 
     assert lazy_libgdal.lgdal._wrapped is empty
 
@@ -66,7 +66,7 @@ def test_lgdal_loaded_on_first_access():
 
 @pytest.mark.skipif(os.name != "nt", reason="lwingdal is Windows-specific")
 def test_lwingdal_loaded_on_first_access():
-    import django_lazy_gdal.lazy_libgdal as lazy_libgdal
+    import django_lazy_gdal.libgdal as lazy_libgdal
 
     assert lazy_libgdal.lwingdal._wrapped is empty
 
@@ -81,7 +81,7 @@ def test_lwingdal_loaded_on_first_access():
 
 
 def test_lgdal_load_is_cached():
-    import django_lazy_gdal.lazy_libgdal as lazy_libgdal
+    import django_lazy_gdal.libgdal as lazy_libgdal
 
     assert lazy_libgdal.lgdal._wrapped is empty
 
@@ -105,7 +105,7 @@ def test_lgdal_load_is_cached():
 
 @pytest.mark.skipif(os.name != "nt", reason="lwingdal is Windows-specific")
 def test_lwingdal_load_is_cached():
-    import django_lazy_gdal.lazy_libgdal as lazy_libgdal
+    import django_lazy_gdal.libgdal as lazy_libgdal
 
     assert lazy_libgdal.lwingdal._wrapped is empty
 
@@ -131,7 +131,7 @@ def test_lwingdal_load_is_cached():
 def test_load_gdal_failure(mock_find_library):
     mock_find_library.return_value = None
 
-    import django_lazy_gdal.lazy_libgdal as lazy_libgdal
+    import django_lazy_gdal.libgdal as lazy_libgdal
 
     with pytest.raises(ImproperlyConfigured, match="Could not find the GDAL library"):
         lazy_libgdal.lgdal.some_attribute
