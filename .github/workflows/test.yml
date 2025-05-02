@@ -73,6 +73,27 @@ jobs:
         if: ${{ contains(needs.*.result, 'failure') }}
         run: exit 1
 
+  gdal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install GDAL
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends \
+            gdal-bin
+
+      - name: Run tests using default Python and Django versions
+        run: |
+          uv run noxfile.py --session "test"
+
   types:
     runs-on: ubuntu-latest
     steps:
