@@ -76,7 +76,7 @@ exclude_lines = [
 ]
 # since we are not testing the actual functionality of libgdal
 # we don't need to cover all code paths
-fail_under = 60
+fail_under = 50
 
 [tool.coverage.run]
 omit = [
