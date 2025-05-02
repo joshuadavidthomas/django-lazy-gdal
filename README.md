@@ -1,6 +1,6 @@
 # django-lazy-gdal
 
-[![PyPI](https://img.shields.io/pypi/v/django-lazy-gdal)](https://pypi.org/project/llm-uv-tool/)
+[![PyPI](https://img.shields.io/pypi/v/django-lazy-gdal)](https://pypi.org/project/django-lazy-gdal/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-lazy-gdal)
 ![Django Version](https://img.shields.io/badge/django-4.2%20%7C%205.1%20%7C%205.2%20%7C%20main-%2344B78B?labelColor=%23092E20)
 
