@@ -17,6 +17,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed monkeypatching to avoid importing Django's GDAL module during patching, which was triggering GDAL loading
+
 ## [0.2.0]
 
 ### Changed
