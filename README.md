@@ -24,7 +24,7 @@ A Django app that patches `django.contrib.gis` to lazily load the GDAL library, 
     uv sync
     ```
 
-2. Import and call the monkeypatch function at the very top of your Django project's settings module, before any other imports:
+2. Import and call the `monkeypatch` function at the top of your Django project's settings module:
 
    ```python
    # settings.py - add these lines at the TOP of the file
