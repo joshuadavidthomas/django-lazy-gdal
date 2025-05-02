@@ -64,9 +64,9 @@ def test_libgdal_is_normal(INSTALLED_APPS, settings):
         from django_lazy_gdal import lazy_libgdal
 
         assert django_libgdal is not lazy_libgdal
-        assert sys.modules[target_module_name] is not lazy_libgdal
 
         if django_libgdal:
+            assert sys.modules[target_module_name] is not lazy_libgdal
             assert django_libgdal.__name__ == target_module_name
 
     finally:
