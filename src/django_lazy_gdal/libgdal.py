@@ -3,11 +3,13 @@ from __future__ import annotations
 import logging
 import os
 import re
+from collections.abc import Callable
 from ctypes import CDLL
 from ctypes import CFUNCTYPE
 from ctypes import c_char_p
 from ctypes import c_int
 from ctypes.util import find_library
+from typing import Any
 
 from django.core.exceptions import ImproperlyConfigured
 from django.utils.functional import SimpleLazyObject
@@ -206,30 +208,18 @@ def gdal_version_info():
 
 
 class ComparableSimpleLazyObject(SimpleLazyObject):
+    _setup: Callable[..., Any]
+    _wrapped: Any
+
     def __ge__(self, other):
         if self._wrapped is empty:
             self._setup()
         return self._wrapped >= other
 
-    def __gt__(self, other):
-        if self._wrapped is empty:
-            self._setup()
-        return self._wrapped > other
-
     def __le__(self, other):
         if self._wrapped is empty:
             self._setup()
         return self._wrapped <= other
-
-    def __lt__(self, other):
-        if self._wrapped is empty:
-            self._setup()
-        return self._wrapped < other
-
-    def __eq__(self, other):
-        if self._wrapped is empty:
-            self._setup()
-        return self._wrapped == other
 
 
 GDAL_VERSION = ComparableSimpleLazyObject(gdal_version_info)
