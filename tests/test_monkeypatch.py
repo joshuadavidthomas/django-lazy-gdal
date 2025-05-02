@@ -21,8 +21,8 @@ def setup():
         if target_module_name in sys.modules:
             del sys.modules[target_module_name]
 
-        if "django_lazy_gdal.lazy_libgdal" in sys.modules:
-            del sys.modules["django_lazy_gdal.lazy_libgdal"]
+        if "django_lazy_gdal.libgdal" in sys.modules:
+            del sys.modules["django_lazy_gdal.libgdal"]
 
         yield
 
@@ -38,7 +38,7 @@ def test_monkeypatch_libgdal():
 
     django_lazy_gdal.monkeypatch()
 
-    from django_lazy_gdal import lazy_libgdal
+    from django_lazy_gdal import libgdal as lazy_libgdal
 
     assert sys.modules["django.contrib.gis.gdal.libgdal"] is lazy_libgdal
 
