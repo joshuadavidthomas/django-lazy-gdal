@@ -87,18 +87,7 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install GDAL (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          sudo apt-get update && sudo apt-get install -y --no-install-recommends \
-            gdal-bin
-
-      - name: Install GDAL (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          winget GISInternals.GDAL
+      - uses: trundev/setup-gdal@main
 
       - name: Run tests using default Python and Django versions
         run: |
