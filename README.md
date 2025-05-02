@@ -24,21 +24,22 @@ A Django app that patches `django.contrib.gis` to lazily load the GDAL library, 
     uv sync
     ```
 
-2. Add the app to your Django project's `INSTALLED_APPS` **after** `django.contrib.gis`:
+2. Import and call the `monkeypatch` function at the top of your Django project's settings module:
 
    ```python
-   INSTALLED_APPS = [
-       # Add these at the top 
-       'django.contrib.gis',
-       'django_lazy_gdal',
-       # ...
-   ]
+   # settings.py - add these lines at the TOP of the file
+   import django_lazy_gdal
+
+
+   django_lazy_gdal.monkeypatch()
+
+   # ... rest of your settings file
    ```
 
-> [!NOTE]
-> **Order matters!** It's crucial to place `'django_lazy_gdal'` immediately after `'django.contrib.gis'` and before any other apps that might access the GeoDjango models in `django.contrib.gis.models` or access `django.contrib.gis.gdal.libgdal` directly. This ensures that the patching occurs before other apps access the module, making the lazy loading effective throughout your project.
+> [!IMPORTANT]
+> **Timing matters!** It's crucial to call `django_lazy_gdal.monkeypatch()` before any GeoDjango modules are imported. This is because Django imports models, which in turn imports the existing eager GDAL loading via imports in `django.contrib.gis.models`, *before* running app `ready()` methods. Calling the monkeypatch function at the top of your settings ensures the patching occurs before any other imports that might access `django.contrib.gis.gdal.libgdal`.
 
-3. That's it! The library will automatically patch Django's `django.contrib.gis.gdal.libgdal` module to use lazy loading.
+3. That's it! The library will patch Django's `django.contrib.gis.gdal.libgdal` module to use lazy loading.
 
 ## Why?
 
