@@ -107,7 +107,7 @@ jobs:
 
       - name: Run type checks
         run: |
-          uv run noxfile.py --session "types"
+          uv run noxfile.py --session "mypy"
 
   coverage:
     runs-on: ubuntu-latest
