@@ -194,4 +194,3 @@ keep-runtime-typing = true
 
 [tool.uv]
 required-version = "<0.8"
-
