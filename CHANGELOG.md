@@ -17,6 +17,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.1.0]
+
 ### Added
 
 - Initial release of django-lazy-gdal
@@ -29,4 +31,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Josh Thomas <josh@joshthomas.dev> (maintainer)
 
-[unreleased]: https://github.com/joshuadavidthomas/django-lazy-gdal/tree/main
+[unreleased]: https://github.com/joshuadavidthomas/django-lazy-gdal/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/joshuadavidthomas/django-lazy-gdal/releases/tag/v0.1.0
