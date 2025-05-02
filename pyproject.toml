@@ -110,6 +110,12 @@ ignore_errors = true
 ignore_missing_imports = true
 module = ["*.migrations.*", "docs.*", "tests.*"]
 
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = [
+  "nox.*",
+]
+
 [tool.mypy_django_plugin]
 ignore_missing_model_attributes = true
 

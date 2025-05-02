@@ -32,7 +32,7 @@ def load_gdal():
     try:
         from django.conf import settings
 
-        lib_path = settings.GDAL_LIBRARY_PATH
+        lib_path = settings.GDAL_LIBRARY_PATH  # type: ignore[misc]
     except (AttributeError, ImportError, ImproperlyConfigured, OSError):
         lib_path = None
 
@@ -83,7 +83,7 @@ def load_gdal():
         raise ImproperlyConfigured(
             'Could not find the GDAL library (tried "%s"). Is GDAL installed? '
             "If it is, try setting GDAL_LIBRARY_PATH in your settings."
-            % '", "'.join(lib_names)
+            % '", "'.join(lib_names)  # type: ignore[arg-type]
         )
 
     # This loads the GDAL/OGR C library
@@ -105,7 +105,7 @@ def load_gdal():
 
 
 def load_wingdal():
-    from ctypes import WinDLL
+    from ctypes import WinDLL  # type: ignore[attr-defined]
 
     lazy_lgdal = lgdal
     lib_path = getattr(lazy_lgdal, "_name", None)
