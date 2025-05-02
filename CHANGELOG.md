@@ -20,7 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - **Breaking**: Move monkeypatching from Django app's `ready()` method to dedicated function. Instead of just adding the app to `INSTALLED_APPS`, you now need to explicitly call `django_lazy_gdal.monkeypatch()` at the top of your settings file.
-- **Internal**: Renamed GDAL loading module from `lazy_libgdal` to `libgdal`.
+- **Internal**: Renamed lazy GDAL library loading module from `lazy_libgdal` to `libgdal`.
 
 ## [0.1.0]
 
