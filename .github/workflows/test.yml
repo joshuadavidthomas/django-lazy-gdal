@@ -61,18 +61,6 @@ jobs:
         run: |
           uv run noxfile.py --session "tests(python='${{ matrix.python-version }}', django='${{ matrix.django-version }}')"
 
-  tests:
-    runs-on: ubuntu-latest
-    needs: test
-    if: always()
-    steps:
-      - name: OK
-        if: ${{ !(contains(needs.*.result, 'failure')) }}
-        run: exit 0
-      - name: Fail
-        if: ${{ contains(needs.*.result, 'failure') }}
-        run: exit 1
-
   gdal:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -105,6 +93,18 @@ jobs:
       - name: Run tests using default Python and Django versions
         run: |
           uv run noxfile.py --session "test"
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: [gdal, test]
+    if: always()
+    steps:
+      - name: OK
+        if: ${{ !(contains(needs.*.result, 'failure')) }}
+        run: exit 0
+      - name: Fail
+        if: ${{ contains(needs.*.result, 'failure') }}
+        run: exit 1
 
   types:
     runs-on: ubuntu-latest
