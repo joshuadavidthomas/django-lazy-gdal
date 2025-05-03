@@ -6,6 +6,9 @@
 
 A Django app that patches `django.contrib.gis` to lazily load the GDAL library, functioning as a drop-in replacement that follows the same pattern used for the GEOS library.
 
+> [!WARNING]
+> This is an early proof-of-concept attempt at making the GDAL library load lazily, like the GEOS library. It is currently non-functional.
+
 ## Requirements
 
 - Python 3.9, 3.10, 3.11, 3.12, 3.13
