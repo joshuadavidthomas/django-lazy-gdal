@@ -41,10 +41,9 @@ def bool_output(func, argtypes, errcheck=None):
 
 
 class BoolOutput(GDALFuncFactory):
-    """For GDAL routines that return a boolean as int."""
+    """For GDAL routines that return a boolean value."""
 
-    restype = c_int
-    errcheck = staticmethod(lambda result, func, cargs: bool(result))
+    restype = c_bool
 
 
 def double_output(func, argtypes, errcheck=False, strarg=False, cpl=False):
@@ -62,6 +61,13 @@ class DoubleOutput(GDALFuncFactory):
     """For GDAL routines that return a double."""
 
     restype = c_double
+
+    def __init__(self, func_name, *, errcheck=False, strarg=False, cpl=False, **kwargs):
+        super().__init__(func_name, **kwargs)
+        if strarg:
+            self.errcheck = staticmethod(check_str_arg)
+        elif errcheck:
+            self.errcheck = staticmethod(partial(check_arg_errcode, cpl=cpl))
 
 
 def geom_output(func, argtypes, offset=None):
@@ -91,8 +97,20 @@ def geom_output(func, argtypes, offset=None):
 class GeomOutput(GDALFuncFactory):
     """For GDAL routines that return a geometry."""
 
-    restype = c_void_p
-    errcheck = staticmethod(check_geom)
+    def __init__(self, func_name, *, offset=None, **kwargs):
+        super().__init__(func_name, **kwargs)
+        if not offset:
+            # When a geometry pointer is directly returned.
+            self.restype = c_void_p
+            self.errcheck = staticmethod(check_geom)
+        else:
+            # Error code returned, geometry is returned by-reference.
+            self.restype = c_int
+
+            def geomerrcheck(result, func, cargs):
+                return check_geom_offset(result, func, cargs, offset)
+
+            self.errcheck = staticmethod(geomerrcheck)
 
 
 def int_output(func, argtypes, errcheck=None):
@@ -120,7 +138,7 @@ def int64_output(func, argtypes):
 class Int64Output(GDALFuncFactory):
     """For GDAL routines that return a 64-bit integer."""
 
-    restype = c_long
+    restype = c_int64
 
 
 def srs_output(func, argtypes):
@@ -163,8 +181,20 @@ def const_string_output(func, argtypes, offset=None, decoding=None, cpl=False):
 class ConstStringOutput(GDALFuncFactory):
     """For GDAL routines that return a const string."""
 
-    restype = c_char_p
-    errcheck = staticmethod(check_const_string)
+    def __init__(self, func_name, *, offset=None, decoding=None, cpl=False, **kwargs):
+        super().__init__(func_name, **kwargs)
+        if offset:
+            self.restype = c_int
+        else:
+            self.restype = c_char_p
+
+        def _check_const(result, func, cargs):
+            res = check_const_string(result, func, cargs, offset=offset, cpl=cpl)
+            if res and decoding:
+                res = res.decode(decoding)
+            return res
+
+        self.errcheck = staticmethod(_check_const)
 
 
 def string_output(func, argtypes, offset=-1, str_result=False, decoding=None):
@@ -196,6 +226,34 @@ def string_output(func, argtypes, offset=-1, str_result=False, decoding=None):
     return func
 
 
+class StringOutput(GDALFuncFactory):
+    """For GDAL routines that return a string."""
+
+    def __init__(
+        self, func_name, *, offset=-1, str_result=False, decoding=None, **kwargs
+    ):
+        super().__init__(func_name, **kwargs)
+        if str_result:
+            # Use subclass of c_char_p so the error checking routine
+            # can free the memory at the pointer's address.
+            self.restype = gdal_char_p
+        else:
+            # Error code is returned
+            self.restype = c_int
+
+        # Dynamically defining our error-checking function with the
+        # given offset.
+        def _check_str(result, func, cargs):
+            res = check_string(
+                result, func, cargs, offset=offset, str_result=str_result
+            )
+            if res and decoding:
+                res = res.decode(decoding)
+            return res
+
+        self.errcheck = staticmethod(_check_str)
+
+
 def void_output(func, argtypes, errcheck=True, cpl=False):
     """
     For functions that don't only return an error code that needs to
@@ -222,8 +280,6 @@ class VoidOutput(GDALFuncFactory):
         if errcheck:
             # When errcheck=True, function returns int error code
             self.restype = c_int
-            from functools import partial
-
             self.errcheck = staticmethod(partial(check_errcode, cpl=cpl))
         else:
             # When errcheck=False, function returns void
@@ -260,3 +316,16 @@ def chararray_output(func, argtypes, errcheck=True):
     if errcheck:
         func.errcheck = check_pointer
     return func
+
+
+class CharArrayOutput(GDALFuncFactory):
+    """For GDAL routines that return a c_char_p array."""
+
+    restype = POINTER(c_char_p)
+
+    def __init__(self, func_name, *, errcheck=True, **kwargs):
+        super().__init__(func_name, **kwargs)
+        if errcheck:
+            self.errcheck = staticmethod(check_pointer)
+        else:
+            self.errcheck = None

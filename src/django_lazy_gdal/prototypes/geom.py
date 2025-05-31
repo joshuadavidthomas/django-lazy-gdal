@@ -8,10 +8,7 @@ from ctypes import c_void_p
 
 from django.contrib.gis.gdal.envelope import OGREnvelope
 from django.contrib.gis.gdal.libgdal import GDAL_VERSION
-from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib.gis.gdal.prototypes.errcheck import check_envelope
-from django.contrib.gis.gdal.prototypes.generation import double_output
-from django.contrib.gis.gdal.prototypes.generation import string_output
 
 from django_lazy_gdal.libgdal import GDALFuncFactory
 from django_lazy_gdal.prototypes.generation import BoolOutput
@@ -20,24 +17,28 @@ from django_lazy_gdal.prototypes.generation import DoubleOutput
 from django_lazy_gdal.prototypes.generation import GeomOutput
 from django_lazy_gdal.prototypes.generation import IntOutput
 from django_lazy_gdal.prototypes.generation import SRSOutput
+from django_lazy_gdal.prototypes.generation import StringOutput
 from django_lazy_gdal.prototypes.generation import VoidOutput
 
 
 # ### Generation routines specific to this module ###
 class EnvFunc(GDALFuncFactory):
     """For getting OGREnvelopes."""
+
     restype = None
     errcheck = staticmethod(check_envelope)
 
 
 class PntFunc(GDALFuncFactory):
     """For accessing point information."""
+
     argtypes = [c_void_p, c_int]
     restype = c_double
 
 
 class TopologyFunc(GDALFuncFactory):
     """For topology functions."""
+
     argtypes = [c_void_p, c_void_p]
     restype = c_int
     errcheck = staticmethod(lambda result, func, cargs: bool(result))
@@ -47,11 +48,14 @@ class TopologyFunc(GDALFuncFactory):
 
 # GeoJSON routines.
 from_json = GeomOutput("OGR_G_CreateGeometryFromJson", argtypes=[c_char_p])
-to_json = string_output(
-    lgdal.OGR_G_ExportToJson, [c_void_p], str_result=True, decoding="ascii"
+to_json = StringOutput(
+    "OGR_G_ExportToJson", argtypes=[c_void_p], str_result=True, decoding="ascii"
 )
-to_kml = string_output(
-    lgdal.OGR_G_ExportToKML, [c_void_p, c_char_p], str_result=True, decoding="ascii"
+to_kml = StringOutput(
+    "OGR_G_ExportToKML",
+    argtypes=[c_void_p, c_char_p],
+    str_result=True,
+    decoding="ascii",
 )
 
 # GetX, GetY, GetZ all return doubles.
@@ -114,14 +118,14 @@ to_wkb = VoidOutput(
     "OGR_G_ExportToWkb", argtypes=None, errcheck=True
 )  # special handling for WKB.
 to_iso_wkb = VoidOutput("OGR_G_ExportToIsoWkb", argtypes=None, errcheck=True)
-to_wkt = string_output(
-    lgdal.OGR_G_ExportToWkt, [c_void_p, POINTER(c_char_p)], decoding="ascii"
+to_wkt = StringOutput(
+    "OGR_G_ExportToWkt", argtypes=[c_void_p, POINTER(c_char_p)], decoding="ascii"
 )
-to_iso_wkt = string_output(
-    lgdal.OGR_G_ExportToIsoWkt, [c_void_p, POINTER(c_char_p)], decoding="ascii"
+to_iso_wkt = StringOutput(
+    "OGR_G_ExportToIsoWkt", argtypes=[c_void_p, POINTER(c_char_p)], decoding="ascii"
 )
-to_gml = string_output(
-    lgdal.OGR_G_ExportToGML, [c_void_p], str_result=True, decoding="ascii"
+to_gml = StringOutput(
+    "OGR_G_ExportToGML", argtypes=[c_void_p], str_result=True, decoding="ascii"
 )
 if GDAL_VERSION >= (3, 3):
     get_wkbsize = IntOutput("OGR_G_WkbSizeEx", argtypes=[c_void_p])
