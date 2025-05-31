@@ -14,17 +14,17 @@ from ctypes import c_long
 from ctypes import c_uint
 from ctypes import c_void_p
 
-from django.contrib.gis.gdal.envelope import OGREnvelope
+from django_lazy_gdal.envelope import OGREnvelope
 
-from django_lazy_gdal.prototypes.generation import BoolOutput
-from django_lazy_gdal.prototypes.generation import ConstStringOutput
-from django_lazy_gdal.prototypes.generation import DoubleOutput
-from django_lazy_gdal.prototypes.generation import GeomOutput
-from django_lazy_gdal.prototypes.generation import Int64Output
-from django_lazy_gdal.prototypes.generation import IntOutput
-from django_lazy_gdal.prototypes.generation import SRSOutput
-from django_lazy_gdal.prototypes.generation import VoidOutput
-from django_lazy_gdal.prototypes.generation import VoidPtrOutput
+from django_lazy_gdal.prototypes.lazy_generation import BoolOutput
+from django_lazy_gdal.prototypes.lazy_generation import ConstStringOutput
+from django_lazy_gdal.prototypes.lazy_generation import DoubleOutput
+from django_lazy_gdal.prototypes.lazy_generation import GeomOutput
+from django_lazy_gdal.prototypes.lazy_generation import Int64Output
+from django_lazy_gdal.prototypes.lazy_generation import IntOutput
+from django_lazy_gdal.prototypes.lazy_generation import SRSOutput
+from django_lazy_gdal.prototypes.lazy_generation import VoidOutput
+from django_lazy_gdal.prototypes.lazy_generation import VoidPtrOutput
 
 c_int_p = POINTER(c_int)  # shortcut type
 
@@ -66,9 +66,13 @@ get_layer_by_name = VoidPtrOutput(
 get_layer_count = IntOutput("GDALDatasetGetLayerCount", argtypes=[c_void_p])
 
 # Layer Routines
-get_extent = VoidOutput(
-    "OGR_L_GetExtent", argtypes=[c_void_p, POINTER(OGREnvelope), c_int]
-)
+def _get_extent_func():
+    return VoidOutput(
+        "OGR_L_GetExtent", argtypes=[c_void_p, POINTER(OGREnvelope), c_int]
+    )
+
+from django.utils.functional import SimpleLazyObject
+get_extent = SimpleLazyObject(_get_extent_func)
 get_feature = VoidPtrOutput("OGR_L_GetFeature", argtypes=[c_void_p, c_long])
 get_feature_count = IntOutput("OGR_L_GetFeatureCount", argtypes=[c_void_p, c_int])
 get_layer_defn = VoidPtrOutput("OGR_L_GetLayerDefn", argtypes=[c_void_p])

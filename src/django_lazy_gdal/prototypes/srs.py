@@ -5,12 +5,12 @@ from ctypes import c_char_p
 from ctypes import c_int
 from ctypes import c_void_p
 
-from django_lazy_gdal.prototypes.generation import ConstStringOutput
-from django_lazy_gdal.prototypes.generation import DoubleOutput
-from django_lazy_gdal.prototypes.generation import IntOutput
-from django_lazy_gdal.prototypes.generation import SRSOutput
-from django_lazy_gdal.prototypes.generation import StringOutput
-from django_lazy_gdal.prototypes.generation import VoidOutput
+from django_lazy_gdal.prototypes.lazy_generation import ConstStringOutput
+from django_lazy_gdal.prototypes.lazy_generation import DoubleOutput
+from django_lazy_gdal.prototypes.lazy_generation import IntOutput
+from django_lazy_gdal.prototypes.lazy_generation import SRSOutput
+from django_lazy_gdal.prototypes.lazy_generation import StringOutput
+from django_lazy_gdal.prototypes.lazy_generation import VoidOutput
 
 
 # Shortcut generation for routines with known parameters.

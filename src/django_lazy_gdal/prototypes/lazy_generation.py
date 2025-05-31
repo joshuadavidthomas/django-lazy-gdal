@@ -14,17 +14,16 @@ from ctypes import c_int64
 from ctypes import c_void_p
 from functools import partial
 
-from django.contrib.gis.gdal.prototypes.errcheck import check_arg_errcode
-from django.contrib.gis.gdal.prototypes.errcheck import check_const_string
-from django.contrib.gis.gdal.prototypes.errcheck import check_errcode
-from django.contrib.gis.gdal.prototypes.errcheck import check_geom
-from django.contrib.gis.gdal.prototypes.errcheck import check_geom_offset
-from django.contrib.gis.gdal.prototypes.errcheck import check_pointer
-from django.contrib.gis.gdal.prototypes.errcheck import check_srs
-from django.contrib.gis.gdal.prototypes.errcheck import check_str_arg
-from django.contrib.gis.gdal.prototypes.errcheck import check_string
-
 from django_lazy_gdal.libgdal import GDALFuncFactory
+from django_lazy_gdal.prototypes.errcheck import check_arg_errcode
+from django_lazy_gdal.prototypes.errcheck import check_const_string
+from django_lazy_gdal.prototypes.errcheck import check_errcode
+from django_lazy_gdal.prototypes.errcheck import check_geom
+from django_lazy_gdal.prototypes.errcheck import check_geom_offset
+from django_lazy_gdal.prototypes.errcheck import check_pointer
+from django_lazy_gdal.prototypes.errcheck import check_srs
+from django_lazy_gdal.prototypes.errcheck import check_str_arg
+from django_lazy_gdal.prototypes.errcheck import check_string
 
 
 class gdal_char_p(c_char_p):

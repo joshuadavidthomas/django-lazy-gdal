@@ -13,12 +13,12 @@ from ctypes import c_int
 from ctypes import c_void_p
 from functools import partial
 
-from django_lazy_gdal.prototypes.generation import CharArrayOutput
-from django_lazy_gdal.prototypes.generation import ConstStringOutput
-from django_lazy_gdal.prototypes.generation import DoubleOutput
-from django_lazy_gdal.prototypes.generation import IntOutput
-from django_lazy_gdal.prototypes.generation import VoidOutput
-from django_lazy_gdal.prototypes.generation import VoidPtrOutput
+from django_lazy_gdal.prototypes.lazy_generation import CharArrayOutput
+from django_lazy_gdal.prototypes.lazy_generation import ConstStringOutput
+from django_lazy_gdal.prototypes.lazy_generation import DoubleOutput
+from django_lazy_gdal.prototypes.lazy_generation import IntOutput
+from django_lazy_gdal.prototypes.lazy_generation import VoidOutput
+from django_lazy_gdal.prototypes.lazy_generation import VoidPtrOutput
 
 # For more detail about c function names and definitions see
 # https://gdal.org/api/raster_c_api.html

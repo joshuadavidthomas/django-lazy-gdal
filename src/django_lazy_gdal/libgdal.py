@@ -196,7 +196,7 @@ def gdal_full_version():
 
 
 def gdal_version_info():
-    from django.contrib.gis.gdal.error import GDALException
+    from django_lazy_gdal.error import GDALException
 
     ver = gdal_version()
     m = re.match(rb"^(?P<major>\d+)\.(?P<minor>\d+)(?:\.(?P<subminor>\d+))?", ver)

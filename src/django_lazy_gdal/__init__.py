@@ -38,3 +38,20 @@ def monkeypatch() -> None:
 
     sys.modules[django_libgdal_mod] = lazy_libgdal
     logger.debug(f"Monkeypatched {django_libgdal_mod} to use {lazy_libgdal_mod}")
+
+    # Monkeypatch prototypes modules (excluding generation which we renamed)
+    prototype_modules = ["ds", "geom", "raster", "srs"]
+    for module_name in prototype_modules:
+        django_mod = f"django.contrib.gis.gdal.prototypes.{module_name}"
+        lazy_mod = f"django_lazy_gdal.prototypes.{module_name}"
+
+        # Import our lazy module
+        lazy_module = __import__(lazy_mod, fromlist=[module_name])
+
+        if django_mod in sys.modules and sys.modules[django_mod] is not lazy_module:
+            logger.warning(
+                f"{django_mod} was imported before django_lazy_gdal could monkeypatch it."
+            )
+
+        sys.modules[django_mod] = lazy_module
+        logger.debug(f"Monkeypatched {django_mod} to use {lazy_mod}")

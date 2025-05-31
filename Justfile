@@ -24,6 +24,9 @@ bootstrap:
 bump *ARGS:
     uv run --with bumpver bumpver {{ ARGS }}
 
+coverage *ARGS:
+    @just nox coverage {{ ARGS }}
+
 lint:
     uv run --with pre-commit-uv pre-commit run --all-files
     just fmt

@@ -6,19 +6,21 @@ from ctypes import c_double
 from ctypes import c_int
 from ctypes import c_void_p
 
-from django.contrib.gis.gdal.envelope import OGREnvelope
-from django.contrib.gis.gdal.libgdal import GDAL_VERSION
-from django.contrib.gis.gdal.prototypes.errcheck import check_envelope
+from django.utils.functional import SimpleLazyObject
 
+from django_lazy_gdal.envelope import OGREnvelope
+
+from django_lazy_gdal.libgdal import GDAL_VERSION
 from django_lazy_gdal.libgdal import GDALFuncFactory
-from django_lazy_gdal.prototypes.generation import BoolOutput
-from django_lazy_gdal.prototypes.generation import ConstStringOutput
-from django_lazy_gdal.prototypes.generation import DoubleOutput
-from django_lazy_gdal.prototypes.generation import GeomOutput
-from django_lazy_gdal.prototypes.generation import IntOutput
-from django_lazy_gdal.prototypes.generation import SRSOutput
-from django_lazy_gdal.prototypes.generation import StringOutput
-from django_lazy_gdal.prototypes.generation import VoidOutput
+from django_lazy_gdal.prototypes.errcheck import check_envelope
+from django_lazy_gdal.prototypes.lazy_generation import BoolOutput
+from django_lazy_gdal.prototypes.lazy_generation import ConstStringOutput
+from django_lazy_gdal.prototypes.lazy_generation import DoubleOutput
+from django_lazy_gdal.prototypes.lazy_generation import GeomOutput
+from django_lazy_gdal.prototypes.lazy_generation import IntOutput
+from django_lazy_gdal.prototypes.lazy_generation import SRSOutput
+from django_lazy_gdal.prototypes.lazy_generation import StringOutput
+from django_lazy_gdal.prototypes.lazy_generation import VoidOutput
 
 
 # ### Generation routines specific to this module ###
@@ -64,19 +66,24 @@ gety = PntFunc("OGR_G_GetY")
 getz = PntFunc("OGR_G_GetZ")
 getm = PntFunc("OGR_G_GetM")
 
+
 # Geometry creation routines.
-if GDAL_VERSION >= (3, 3):
-    from_wkb = GeomOutput(
-        "OGR_G_CreateFromWkbEx",
-        argtypes=[c_char_p, c_void_p, POINTER(c_void_p), c_int],
-        offset=-2,
-    )
-else:
-    from_wkb = GeomOutput(
-        "OGR_G_CreateFromWkb",
-        argtypes=[c_char_p, c_void_p, POINTER(c_void_p), c_int],
-        offset=-2,
-    )
+def _get_from_wkb():
+    if GDAL_VERSION >= (3, 3):
+        return GeomOutput(
+            "OGR_G_CreateFromWkbEx",
+            argtypes=[c_char_p, c_void_p, POINTER(c_void_p), c_int],
+            offset=-2,
+        )
+    else:
+        return GeomOutput(
+            "OGR_G_CreateFromWkb",
+            argtypes=[c_char_p, c_void_p, POINTER(c_void_p), c_int],
+            offset=-2,
+        )
+
+
+from_wkb = SimpleLazyObject(_get_from_wkb)
 from_wkt = GeomOutput(
     "OGR_G_CreateFromWkt",
     argtypes=[POINTER(c_char_p), c_void_p, POINTER(c_void_p)],
@@ -127,10 +134,16 @@ to_iso_wkt = StringOutput(
 to_gml = StringOutput(
     "OGR_G_ExportToGML", argtypes=[c_void_p], str_result=True, decoding="ascii"
 )
-if GDAL_VERSION >= (3, 3):
-    get_wkbsize = IntOutput("OGR_G_WkbSizeEx", argtypes=[c_void_p])
-else:
-    get_wkbsize = IntOutput("OGR_G_WkbSize", argtypes=[c_void_p])
+
+
+def _get_wkbsize():
+    if GDAL_VERSION >= (3, 3):
+        return IntOutput("OGR_G_WkbSizeEx", argtypes=[c_void_p])
+    else:
+        return IntOutput("OGR_G_WkbSize", argtypes=[c_void_p])
+
+
+get_wkbsize = SimpleLazyObject(_get_wkbsize)
 
 # Geometry spatial-reference related routines.
 assign_srs = VoidOutput(
@@ -183,4 +196,7 @@ geom_transform = VoidOutput("OGR_G_Transform", argtypes=[c_void_p, c_void_p])
 geom_transform_to = VoidOutput("OGR_G_TransformTo", argtypes=[c_void_p, c_void_p])
 
 # For retrieving the envelope of the geometry.
-get_envelope = EnvFunc("OGR_G_GetEnvelope", argtypes=[c_void_p, POINTER(OGREnvelope)])
+def _get_envelope_func():
+    return EnvFunc("OGR_G_GetEnvelope", argtypes=[c_void_p, POINTER(OGREnvelope)])
+
+get_envelope = SimpleLazyObject(_get_envelope_func)
